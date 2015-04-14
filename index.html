@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple HTML5 Video/Audio Application</title>
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+        }
+        
+        audio{
+            visibility: hidden;
+        }
+        
+        #video_container{
+            height: auto;
+            width: auto;
+            background-color: #000;
+        }
+        
+        #back_video{
+            width: 100%;
+            z-index: 0;
+        }
+        
+        #questions{
+            z-index:99999;
+            position: absolute;
+            top: 3%;
+            left: 3%;
+            background-color: transparent;
+        }
+        
+        #questions label{
+            font-size: 3em;
+            font-family: Helvetica, Arial, sans-serif;
+            color: #fff;
+            display: block;
+        }
+        
+        #questions input{
+            background-color: transparent;
+            border:none;
+            border-bottom: 3px #fff solid;
+            font-size: 2.6em;
+            font-family: Helvetica, Arial, sans-serif;
+            color: #fff;
+        }
+        
+        #answers{
+            margin-top: 1.5em;
+            padding: 0 10px 0 10px;
+            display: none;
+        }
+        
+        #answers p {
+            background-color: transparent;
+            border:none;
+            font-size: 2.2em;
+            font-family: Helvetica, Arial, sans-serif;
+            color: #ddf8c6;
+            width: inherit;
+        
+        }
+        
+        .arrow_box {
+            position: relative;
+            background: #88b7d5;
+            border: 4px solid #c2e1f5;
+        }
+        
+        .arrow_box:after, .arrow_box:before {
+            left: 100%;
+            top: 50%;
+            border: solid transparent;
+            content: " ";
+            height: 0;
+            width: 0;
+            position: absolute;
+            pointer-events: none;
+        }
+
+        .arrow_box:after {
+            border-color: rgba(136, 183, 213, 0);
+            border-left-color: #88b7d5;
+            border-width: 30px;
+            margin-top: -30px;
+        }
+        
+        .arrow_box:before {
+            border-color: rgba(194, 225, 245, 0);
+            border-left-color: #c2e1f5;
+            border-width: 36px;
+            margin-top: -36px;
+        }
+        
+    </style>
+</head>
+<body>
+    
+    <section id="video_container">
+        <video id="back_video" src="video/dog.mp4" loop></video>
+    </section>
+    
+    <section id="questions">
+       <form onsubmit="return processAnswer()">
+        <label for="question_happy">Are you happy?</label>
+        <input type="text" id="question_happy" placeholder="answer" required>
+        
+        <section id="answers" class="arrow_box">
+            <p id="answer"><!-- The answer will be added here after the user submits the answer --></p>
+        </section>
+       </form>
+       <audio id="dog_bark" src="audio/dog_bark.mp3"></audio>
+       <audio id="dog_bark_long" src="audio/dog_bark_long.mp3"></audio>
+    </section>
+    
+    <script>
+        var doc = document;
+        var video = doc.getElementById("back_video");
+        var audio_short = doc.getElementById("dog_bark");
+        var audio_long = doc.getElementById("dog_bark_long");
+        
+        doc.addEventListener("DOMContentLoaded", function(event) {
+            video.play();
+            video.addEventListener("click", playLongBark);
+        });
+
+        function processAnswer(){
+            var input_answer = doc.getElementById("question_happy");
+            var answer = input_answer.value.toLowerCase();
+            var reply;
+            var reply_field =  doc.getElementById("answer");
+            var answers_block = doc.getElementById("answers")
+            answers_block.style.display = "block";
+            if(answer == "yes"){
+                reply = "Me too! I'm happy if you are happy!";
+                reply_field.textContent = reply;
+                
+            }else if(answer == "no"){
+                reply = "I'm going to lick your face you until you are happy!";
+                reply_field.textContent = reply;
+            }else{
+                reply = "I don't understand you answer...";
+                reply_field.textContent = reply;
+                playShortBark();
+            }
+            
+            var timer=setTimeout(function(){answers_block.style.display ="none"; input_answer.value = "";},2000);
+            return false;
+        }
+        
+        function playShortBark(){
+            audio_short.play();
+        }
+        
+        function playLongBark(){
+            audio_long.play();
+        }
+    </script>
+</body>
+</html>
